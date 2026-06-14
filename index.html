@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kaikei — 家族のおかいもの</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#FAF6EE;
+  --ivory-2:#F4EDDF;
+  --ink:#1F1B16;
+  --ink-2:#4A423A;
+  --muted:#8A7E70;
+  --line:#E7DFCE;
+  /* family palette */
+  --papa:#2F6BFF;
+  --mama:#FF7AA8;
+  --kodomo1:#FFB347;
+  --kodomo2:#3CC6A6;
+  --kodomo3:#A06CE4;
+  --kodomo4:#FF6F61;
+  --accent:#FFD56B;
+  --good:#3CC6A6;
+  --warn:#FF7AA8;
+  --bad:#FF6F61;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ivory);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* ===== flowing background waves ===== */
+.fluid-bg{position:fixed;inset:0;z-index:-2;background:var(--ivory);overflow:hidden}
+.fluid-bg svg{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.fluid-bg .blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.45;mix-blend-mode:multiply;animation:float 18s ease-in-out infinite alternate}
+.fluid-bg .b1{width:540px;height:540px;background:var(--papa);top:-180px;left:-120px;animation-delay:-2s}
+.fluid-bg .b2{width:480px;height:480px;background:var(--kodomo1);top:30%;right:-160px;animation-delay:-7s}
+.fluid-bg .b3{width:520px;height:520px;background:var(--kodomo3);bottom:-200px;left:25%;animation-delay:-12s}
+.fluid-bg .b4{width:380px;height:380px;background:var(--mama);top:55%;left:-100px;animation-delay:-15s}
+@keyframes float{
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(60px,-40px) scale(1.1)}
+  100%{transform:translate(-40px,60px) scale(.95)}
+}
+
+/* ===== wave seam between sections ===== */
+.wave-seam{display:block;width:100%;height:64px;margin:-1px 0}
+.wave-seam path{animation:wave-shift 8s ease-in-out infinite alternate}
+@keyframes wave-shift{from{transform:translateX(-12px)}to{transform:translateX(12px)}}
+
+/* ===== top nav ===== */
+.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);background:rgba(250,246,238,.7);border-bottom:1px solid rgba(231,223,206,.6)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-.01em}
+.brand-mark{width:30px;height:30px;border-radius:9px;background:conic-gradient(from 180deg,var(--papa),var(--kodomo1),var(--kodomo3),var(--mama),var(--papa));animation:spin 16s linear infinite;box-shadow:0 4px 14px rgba(47,107,255,.25)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-links a{padding:8px 14px;border-radius:10px;font-size:14px;color:var(--ink-2);transition:background .2s,color .2s}
+.nav-links a:hover{background:rgba(31,27,22,.05);color:var(--ink)}
+.nav-links a.active{color:var(--ink);background:rgba(31,27,22,.07)}
+.nav-cta{display:flex;align-items:center;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid var(--line);background:var(--ivory-2)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px rgba(60,198,166,.18);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(60,198,166,.18)}50%{box-shadow:0 0 0 8px rgba(60,198,166,0)}}
+
+/* ===== hero ===== */
+.hero{position:relative;padding:120px 32px 80px;max-width:1280px;margin:0 auto}
+.hero-inner{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center}
+@media(max-width:940px){.hero-inner{grid-template-columns:1fr;gap:48px}.hero{padding:80px 20px 48px}}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:var(--ivory-2);border:1px solid var(--line);font-size:12px;font-weight:500;color:var(--ink-2);letter-spacing:.04em;text-transform:uppercase}
+.eyebrow .rainbow{width:14px;height:14px;border-radius:50%;background:conic-gradient(var(--papa),var(--kodomo1),var(--kodomo3),var(--mama),var(--kodomo4),var(--papa));animation:spin 8s linear infinite}
+h1.display{font-size:clamp(40px,5.6vw,72px);line-height:1.02;letter-spacing:-.02em;font-weight:600;margin:24px 0 18px;color:var(--ink)}
+h1.display .ink-stroke{font-style:italic;font-weight:300;background:linear-gradient(110deg,var(--papa) 0%,var(--kodomo3) 40%,var(--mama) 70%,var(--kodomo1) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:grad-shift 9s ease-in-out infinite alternate}
+@keyframes grad-shift{from{background-position:0% 50%}to{background-position:100% 50%}}
+.lede{font-size:18px;line-height:1.55;color:var(--ink-2);max-width:560px}
+.cta-row{margin-top:36px;display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:14px 24px;border-radius:14px;font-weight:500;font-size:15px;display:inline-flex;align-items:center;gap:8px;transition:transform .15s ease,box-shadow .2s ease,background .2s}
+.btn-primary{background:var(--ink);color:var(--ivory);box-shadow:0 8px 24px rgba(31,27,22,.18)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(31,27,22,.26)}
+.btn-ghost{background:var(--ivory-2);border:1px solid var(--line);color:var(--ink)}
+.btn-ghost:hover{background:var(--ivory)}
+
+/* hero family orbs */
+.family-orbs{position:relative;height:420px}
+.orb{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center;font-weight:600;box-shadow:0 18px 40px rgba(31,27,22,.15);cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.orb:hover{transform:translateY(-6px) scale(1.03)}
+.orb .name{font-size:16px;letter-spacing:.02em}
+.orb .role{font-size:10px;opacity:.85;text-transform:uppercase;letter-spacing:.12em;margin-top:2px}
+.orb .ring{position:absolute;inset:-10px;border-radius:50%;border:2px dashed rgba(255,255,255,.55);animation:spin 22s linear infinite}
+.o-papa{width:176px;height:176px;background:radial-gradient(circle at 30% 30%,#5b8dff,var(--papa));top:0;left:30px}
+.o-mama{width:160px;height:160px;background:radial-gradient(circle at 30% 30%,#ff9bc1,var(--mama));top:60px;right:30px}
+.o-k1{width:108px;height:108px;background:radial-gradient(circle at 30% 30%,#ffcf7a,var(--kodomo1));bottom:60px;left:60px;font-size:13px}
+.o-k1 .name{font-size:13px}.o-k1 .role{font-size:9px}
+.o-k2{width:118px;height:118px;background:radial-gradient(circle at 30% 30%,#6bdcc0,var(--kodomo2));bottom:130px;right:80px;font-size:13px}
+.o-k2 .name{font-size:13px}.o-k2 .role{font-size:9px}
+.o-k3{width:96px;height:96px;background:radial-gradient(circle at 30% 30%,#bf96ee,var(--kodomo3));bottom:0;left:50%;transform:translateX(-50%);font-size:12px}
+.o-k3 .name{font-size:12px}.o-k3 .role{font-size:8px}
+.family-orbs::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 60% 50%, transparent 30%, rgba(250,246,238,.4) 90%);pointer-events:none;border-radius:50%}
+
+/* ===== common section ===== */
+section.block{position:relative;padding:100px 32px;max-width:1280px;margin:0 auto}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:48px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(28px,3.4vw,44px);letter-spacing:-.015em;font-weight:600;line-height:1.1}
+.sec-head p{color:var(--ink-2);max-width:420px;font-size:15px;line-height:1.55}
+.sec-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-bottom:14px}
+.sec-tag::before{content:'';width:18px;height:1px;background:var(--ink-2)}
+
+/* ===== stats ribbon ===== */
+.ribbon{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(244,237,223,.4)}
+@media(max-width:940px){.ribbon{grid-template-columns:repeat(2,1fr)}}
+.ribbon .stat{padding:32px 24px;border-right:1px solid var(--line)}
+.ribbon .stat:last-child{border-right:none}
+@media(max-width:940px){.ribbon .stat:nth-child(2n){border-right:none}.ribbon .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+.ribbon .stat .v{font-size:32px;font-weight:600;letter-spacing:-.01em}
+.ribbon .stat .v sup{font-size:14px;color:var(--ink-2);margin-left:2px}
+.ribbon .stat .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+.ribbon .stat .d{display:inline-flex;align-items:center;gap:4px;font-size:12px;margin-top:8px;padding:3px 8px;border-radius:6px;font-weight:500}
+.ribbon .stat .d.up{color:var(--good);background:rgba(60,198,166,.12)}
+.ribbon .stat .d.dn{color:var(--bad);background:rgba(255,111,97,.12)}
+
+/* ===== dashboard grid ===== */
+.dash{display:grid;grid-template-columns:1.4fr 1fr;gap:24px}
+@media(max-width:940px){.dash{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 6px 20px rgba(31,27,22,.04);position:relative;overflow:hidden}
+.card h3{font-size:14px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.card h3 .ico{width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;background:var(--ivory-2)}
+
+/* flow chart */
+.flow{height:240px;position:relative}
+.flow svg{width:100%;height:100%;overflow:visible}
+.flow .ax{stroke:var(--line);stroke-width:1;stroke-dasharray:2 4}
+.flow .bar-w,.flow .bar-r{border-radius:6px;filter:drop-shadow(0 4px 8px rgba(31,27,22,.08))}
+.flow .bar-w{transition:height .9s cubic-bezier(.2,.8,.2,1),y .9s cubic-bezier(.2,.8,.2,1)}
+.flow .label{font-size:11px;fill:var(--ink-2);font-family:'JetBrains Mono',monospace}
+.flow .pt-label{font-size:10px;fill:var(--ink);font-family:'JetBrains Mono',monospace;font-weight:500}
+.flow .pop{fill:var(--ink)}
+
+/* member breakdown */
+.members{display:flex;flex-direction:column;gap:14px}
+.member{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px;border-radius:14px;transition:background .2s}
+.member:hover{background:var(--ivory-2)}
+.member .ava{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;box-shadow:0 3px 10px rgba(31,27,22,.1)}
+.member .meta .n{font-weight:600;font-size:14px}
+.member .meta .s{font-size:12px;color:var(--muted);margin-top:2px}
+.member .amt{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:14px;text-align:right}
+.member .amt .pct{font-size:11px;color:var(--muted);font-weight:400;display:block;margin-top:2px}
+.bar-track{height:6px;background:var(--ivory-2);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar-fill{height:100%;border-radius:99px;width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+
+/* ===== spend cards ===== */
+.spend-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:940px){.spend-grid{grid-template-columns:1fr}}
+.spend-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;position:relative;overflow:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.spend-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(31,27,22,.1)}
+.spend-card .head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.spend-card .ico{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:600}
+.spend-card .title{font-weight:600;font-size:15px}
+.spend-card .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.spend-card .num{font-size:30px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
+.spend-card .num small{font-size:13px;color:var(--muted);font-weight:400;margin-left:4px}
+.spark{height:54px;width:100%;margin:10px 0 14px}
+.spark path{stroke-width:2;fill:none;stroke-linecap:round}
+.spark .fill{stroke-width:0;fill-opacity:.12}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:var(--ink-2);background:var(--ivory-2)}
+.tag.warn{color:var(--warn);background:rgba(255,122,168,.12);border-color:rgba(255,122,168,.3)}
+.tag.good{color:var(--good);background:rgba(60,198,166,.12);border-color:rgba(60,198,166,.3)}
+
+/* ===== QR + Card controls ===== */
+.control-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:940px){.control-grid{grid-template-columns:1fr}}
+.qr-card{background:linear-gradient(140deg,#fff 0%,var(--ivory-2) 100%)}
+.qr-code{width:160px;height:160px;margin:8px auto 16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:center;position:relative}
+.qr-code svg{width:100%;height:100%}
+.qr-code .pulse-ring{position:absolute;inset:-4px;border-radius:16px;border:2px solid var(--papa);animation:pulse-ring 2.6s ease-out infinite}
+@keyframes pulse-ring{0%{opacity:.7;transform:scale(.96)}100%{opacity:0;transform:scale(1.06)}}
+.qr-line{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.qr-line:last-of-type{border-bottom:none}
+.qr-line .k{color:var(--muted)}
+.qr-line .v{font-family:'JetBrains Mono',monospace;font-weight:500}
+.card-mini{padding:14px;border-radius:14px;background:linear-gradient(135deg,#1F1B16 0%,#2A241D 100%);color:var(--ivory);position:relative;overflow:hidden}
+.card-mini::before{content:'';position:absolute;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle, var(--mama), transparent 70%);top:-40px;right:-40px;opacity:.55}
+.card-mini::after{content:'';position:absolute;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle, var(--papa), transparent 70%);bottom:-50px;left:-30px;opacity:.55}
+.card-mini .row1{display:flex;justify-content:space-between;align-items:center;font-size:12px;opacity:.85;position:relative;z-index:2}
+.card-mini .num{font-family:'JetBrains Mono',monospace;font-size:20px;letter-spacing:.16em;margin:24px 0 16px;position:relative;z-index:2}
+.card-mini .row2{display:flex;justify-content:space-between;font-size:11px;opacity:.7;position:relative;z-index:2}
+.card-mini-actions{display:flex;gap:8px;margin-top:14px;position:relative;z-index:2}
+.card-mini-actions button{flex:1;background:rgba(255,255,255,.1);padding:8px 0;border-radius:8px;font-size:12px;color:var(--ivory);transition:background .2s}
+.card-mini-actions button:hover{background:rgba(255,255,255,.18)}
+
+/* ===== threshold rules ===== */
+.rules-list{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.rule{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#fff;transition:border-color .2s,box-shadow .2s}
+.rule:hover{border-color:var(--ink-2);box-shadow:0 6px 18px rgba(31,27,22,.06)}
+.rule .ava{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600}
+.rule .txt .t{font-weight:600;font-size:14px}
+.rule .txt .d{font-size:12px;color:var(--muted);margin-top:2px}
+.rule .r-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--ink-2)}
+.toggle{position:relative;width:42px;height:24px;border-radius:99px;background:var(--ivory-2);border:1px solid var(--line);transition:background .25s}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .25s cubic-bezier(.2,.8,.2,1);box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.toggle.on{background:var(--good);border-color:var(--good)}
+.toggle.on::after{transform:translateX(18px)}
+
+/* ===== live transaction stream ===== */
+.stream{display:flex;flex-direction:column;gap:10px;max-height:380px;overflow:hidden;position:relative}
+.stream::after{content:'';position:absolute;left:0;right:0;bottom:0;height:60px;background:linear-gradient(to bottom,transparent,#fff);pointer-events:none}
+.txn{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--line);animation:slide-in .5s ease}
+@keyframes slide-in{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.txn .icn{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.txn .meta .who{font-size:13px;font-weight:600}
+.txn .meta .where{font-size:11px;color:var(--muted);margin-top:2px}
+.txn .price{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.txn .price .time{display:block;font-size:10px;color:var(--muted);font-weight:400;margin-top:2px}
+
+/* ===== footer wave + footer ===== */
+.footer-wave{height:120px;overflow:hidden}
+.footer-wave svg{width:100%;height:100%}
+footer{padding:48px 32px 80px;background:var(--ivory-2);color:var(--ink-2)}
+.foot-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;font-size:13px}
+
+/* ===== watermark flow lines ===== */
+.flow-lines{position:absolute;inset:0;pointer-events:none;z-index:-1;opacity:.25}
+.flow-lines svg{width:100%;height:100%}
+.flow-lines path{fill:none;stroke-width:1.2;stroke-linecap:round;stroke-dasharray:6 8;animation:stream-line 6s linear infinite}
+@keyframes stream-line{to{stroke-dashoffset:-200}}
+
+/* scroll reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* scroll-driven wave guide */
+.scroll-guide{position:fixed;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--papa),var(--kodomo1),var(--mama),var(--kodomo3),var(--kodomo4));transform-origin:0;transform:scaleX(0);z-index:99;transition:transform .1s linear}
+
+</style>
+</head>
+
+<body>
+
+<div class="scroll-guide" id="scrollGuide"></div>
+
+<!-- flowing background -->
+<div class="fluid-bg" aria-hidden="true">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="wg1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#2F6BFF" stop-opacity=".06"/>
+        <stop offset="50%" stop-color="#FFB347" stop-opacity=".05"/>
+        <stop offset="100%" stop-color="#FF6F61" stop-opacity=".04"/>
+      </linearGradient>
+    </defs>
+    <path d="M0,420 C240,520 480,320 720,420 C960,520 1200,360 1440,440 L1440,0 L0,0 Z" fill="url(#wg1)">
+      <animate attributeName="d" dur="14s" repeatCount="indefinite"
+        values="M0,420 C240,520 480,320 720,420 C960,520 1200,360 1440,440 L1440,0 L0,0 Z;
+                M0,380 C260,460 500,540 740,400 C980,260 1180,500 1440,380 L1440,0 L0,0 Z;
+                M0,420 C240,520 480,320 720,420 C960,520 1200,360 1440,440 L1440,0 L0,0 Z"/>
+    </path>
+    <path d="M0,560 C220,640 460,480 720,560 C980,640 1240,500 1440,580 L1440,900 L0,900 Z" fill="url(#wg1)" opacity=".6">
+      <animate attributeName="d" dur="11s" repeatCount="indefinite"
+        values="M0,560 C220,640 460,480 720,560 C980,640 1240,500 1440,580 L1440,900 L0,900 Z;
+                M0,520 C260,600 520,720 760,560 C1000,400 1180,680 1440,520 L1440,900 L0,900 Z;
+                M0,560 C220,640 460,480 720,560 C980,640 1240,500 1440,580 L1440,900 L0,900 Z"/>
+    </path>
+  </svg>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="blob b4"></div>
+</div>
+
+<!-- nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#">
+      <span class="brand-mark"></span>
+      <span>Kaikei<span style="color:var(--muted);font-weight:400">.family</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#dashboard" class="active">ダッシュボード</a>
+      <a href="#cards">カード</a>
+      <a href="#qr">QRコード</a>
+      <a href="#rules">ルール</a>
+      <a href="#stream">ログ</a>
+    </div>
+    <div class="nav-cta">
+      <span class="chip"><span class="dot"></span>ライブ同期中</span>
+      <button class="btn btn-primary" style="padding:10px 18px;font-size:13px">
+        ＋ 支出を記録
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- hero -->
+<header class="hero reveal in">
+  <div class="hero-inner">
+    <div>
+      <span class="eyebrow"><span class="rainbow"></span>Family Budget 2026</span>
+      <h1 class="display">家族みんなで、<br><span class="ink-stroke">おカネの流れを</span><br>見える化しよう。</h1>
+      <p class="lede">パパ・ママ・子どもたち。一人ひとりの"色"で家計簿が見える。<br>QRひとつでみんなの支出をリアルタイムに追跡。子供の使いすぎも、親のダッシュボードで自動コントロール。</p>
+      <div class="cta-row">
+        <button class="btn btn-primary">家族を招待する →</button>
+        <button class="btn btn-ghost">デモを見る</button>
+      </div>
+    </div>
+    <div class="family-orbs" aria-label="家族のメンバー">
+      <div class="orb o-papa"><div class="ring"></div><div class="name">パパ</div><div class="role">Admin</div></div>
+      <div class="orb o-mama"><div class="ring"></div><div class="name">ママ</div><div class="role">Admin</div></div>
+      <div class="orb o-k1"><div class="ring"></div><div class="name">そうた</div><div class="role">小学5</div></div>
+      <div class="orb o-k2"><div class="ring"></div><div class="name">ゆい</div><div class="role">中学2</div></div>
+      <div class="orb o-k3"><div class="ring"></div><div class="name">あおい</div><div class="role">年長</div></div>
+    </div>
+  </div>
+</header>
+
+
+<!-- wave seam -->
+<svg class="wave-seam" viewBox="0 0 1440 64" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M0,32 C240,8 480,56 720,32 C960,8 1200,56 1440,32 L1440,64 L0,64 Z" fill="var(--ivory-2)"/>
+</svg>
+
+<!-- ribbon -->
+<div class="ribbon">
+  <div class="stat"><div class="v">¥284</div><div class="k">今月の総支出</div><div class="d up">↑ 4.2% 予算内</div></div>
+  <div class="stat"><div class="v">¥115</div><div class="k">残り予算</div><div class="d dn">↓ 12日分</div></div>
+  <div class="stat"><div class="v">47</div><div class="k">今月の取引</div><div class="d up">↑ 8 先月比</div></div>
+  <div class="stat"><div class="v">5</div><div class="k">アクティブ家族</div><div class="d up">全てオンライン</div></div>
+</div>
+
+<!-- dashboard section -->
+<section class="block" id="dashboard">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Dashboard · 親権限</div>
+      <h2>今月のおカネは<br>どこへ流れてる？</h2>
+    </div>
+    <p>週単位・日単位の支出フローと、家族みんなのカテゴリ別内訳をひとつの画面で。</p>
+  </div>
+
+  <div class="dash">
+    <div class="card reveal">
+      <h3><span class="ico">F</span>週次キャッシュフロー</h3>
+      <div class="flow" id="flowChart"></div>
+    </div>
+
+    <div class="card reveal">
+      <h3><span class="ico">M</span>メンバー別支出</h3>
+      <div class="members" id="memberList"></div>
+    </div>
+  </div>
+</section>
+
+<svg class="wave-seam" viewBox="0 0 1440 64" preserveAspectRatio="none"><path d="M0,48 C220,16 480,52 720,40 C960,28 1200,56 1440,32 L1440,64 L0,64 Z" fill="#fff"/></svg>
+<section class="block" id="spend">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Categories</div>
+      <h2>カテゴリ別、今月の動き</h2>
+    </div>
+    <p>食費・教育・サブスク・突発支出をリアルタイム可視化。</p>
+  </div>
+  <div class="spend-grid">
+    <div class="spend-card reveal">
+      <div class="head"><div class="ico" style="background:linear-gradient(135deg,var(--mama),#ff5a90)">G</div><div><div class="title">食費・日用品</div><div class="sub">Grocery & Daily</div></div></div>
+      <div class="num">¥84,230<small>/ 月</small></div>
+      <svg class="spark" viewBox="0 0 200 54" preserveAspectRatio="none"><path fill="var(--mama)" fill-opacity=".15" d="M0,40 C30,30 50,20 80,18 C110,16 130,28 160,22 C180,18 190,12 200,10 L200,54 L0,54 Z"/><path d="M0,40 C30,30 50,20 80,18 C110,16 130,28 160,22 C180,18 190,12 200,10" stroke="var(--mama)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <div class="tag-row"><span class="tag">スーパー</span><span class="tag">外食</span><span class="tag warn">上限80%</span></div>
+    </div>
+    <div class="spend-card reveal">
+      <div class="head"><div class="ico" style="background:linear-gradient(135deg,var(--papa),#1a4ad6)">E</div><div><div class="title">教育・習い事</div><div class="sub">Education</div></div></div>
+      <div class="num">¥62,800<small>/ 月</small></div>
+      <svg class="spark" viewBox="0 0 200 54" preserveAspectRatio="none"><path fill="var(--papa)" fill-opacity=".15" d="M0,30 C25,28 60,18 90,22 C120,26 150,12 180,16 C195,18 200,20 200,22 L200,54 L0,54 Z"/><path d="M0,30 C25,28 60,18 90,22 C120,26 150,12 180,16 C195,18 200,20 200,22" stroke="var(--papa)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <div class="tag-row"><span class="tag">塾</span><span class="tag">ピアノ</span><span class="tag good">予算内</span></div>
+    </div>
+    <div class="spend-card reveal">
+      <div class="head"><div class="ico" style="background:linear-gradient(135deg,var(--kodomo3),#7a4dd1)">P</div><div><div class="title">娯楽・サブスク</div><div class="sub">Entertainment</div></div></div>
+      <div class="num">¥21,440<small>/ 月</small></div>
+      <svg class="spark" viewBox="0 0 200 54" preserveAspectRatio="none"><path fill="var(--kodomo3)" fill-opacity=".15" d="M0,44 C20,30 40,38 70,30 C100,22 130,36 160,24 C180,18 195,24 200,18 L200,54 L0,54 Z"/><path d="M0,44 C20,30 40,38 70,30 C100,22 130,36 160,24 C180,18 195,24 200,18" stroke="var(--kodomo3)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <div class="tag-row"><span class="tag">Netflix</span><span class="tag">ゲーム</span><span class="tag warn">+12%</span></div>
+    </div>
+  </div>
+</section>
+<svg class="wave-seam" viewBox="0 0 1440 64" preserveAspectRatio="none"><path d="M0,32 C240,56 480,8 720,32 C960,56 1200,8 1440,32 L1440,64 L0,64 Z" fill="var(--ivory)"/></svg>
+
+<!-- QR + Card section -->
+<section class="block">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Pay · 親権限</div>
+      <h2>QRコード×カード<br>支出をコントロール</h2>
+    </div>
+    <p>子ども用のバーチャルカードを発行。QRコード決済と連携すれば、<br>使った瞬間にダッシュボードへ自動反映されます。</p>
+  </div>
+
+  <div class="control-grid">
+    <div class="card qr-card reveal">
+      <h3><span class="ico">Q</span>QRコード払い · ゆい(中2)</h3>
+      <div class="qr-code">
+        <div class="pulse-ring"></div>
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <rect x="0" y="0" width="100" height="100" fill="#fff"/>
+          <g fill="#1F1B16">
+            <rect x="6" y="6" width="22" height="22" rx="3"/><rect x="72" y="6" width="22" height="22" rx="3"/><rect x="6" y="72" width="22" height="22" rx="3"/>
+            <rect x="11" y="11" width="12" height="12" fill="#fff"/><rect x="77" y="11" width="12" height="12" fill="#fff"/><rect x="11" y="77" width="12" height="12" fill="#fff"/>
+            <rect x="14" y="14" width="6" height="6"/><rect x="80" y="14" width="6" height="6"/><rect x="14" y="80" width="6" height="6"/>
+            <rect x="32" y="8" width="6" height="6"/><rect x="40" y="8" width="6" height="6"/><rect x="52" y="8" width="6" height="6"/><rect x="60" y="8" width="6" height="6"/>
+            <rect x="8" y="32" width="6" height="6"/><rect x="8" y="40" width="6" height="6"/><rect x="8" y="52" width="6" height="6"/><rect x="8" y="60" width="6" height="6"/><rect x="8" y="68" width="6" height="6"/>
+            <rect x="32" y="32" width="6" height="6"/><rect x="44" y="32" width="6" height="6"/><rect x="56" y="32" width="6" height="6"/><rect x="68" y="32" width="6" height="6"/><rect x="84" y="32" width="6" height="6"/><rect x="92" y="32" width="6" height="6"/>
+            <rect x="16" y="44" width="6" height="6"/><rect x="28" y="44" width="6" height="6"/><rect x="40" y="44" width="6" height="6"/><rect x="60" y="44" width="6" height="6"/><rect x="76" y="44" width="6" height="6"/><rect x="88" y="44" width="6" height="6"/>
+            <rect x="32" y="56" width="6" height="6"/><rect x="48" y="56" width="6" height="6"/><rect x="64" y="56" width="6" height="6"/><rect x="80" y="56" width="6" height="6"/>
+            <rect x="16" y="68" width="6" height="6"/><rect x="28" y="68" width="6" height="6"/><rect x="44" y="68" width="6" height="6"/><rect x="56" y="68" width="6" height="6"/><rect x="72" y="68" width="6" height="6"/>
+            <rect x="32" y="80" width="6" height="6"/><rect x="44" y="80" width="6" height="6"/><rect x="60" y="80" width="6" height="6"/><rect x="72" y="80" width="6" height="6"/><rect x="84" y="80" width="6" height="6"/><rect x="92" y="84" width="6" height="6"/>
+            <rect x="32" y="92" width="6" height="6"/><rect x="48" y="92" width="6" height="6"/><rect x="64" y="92" width="6" height="6"/><rect x="80" y="92" width="6" height="6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="qr-line"><span class="k">利用可能残高</span><span class="v">¥3,420 / ¥5,000</span></div>
+      <div class="qr-line"><span class="k">1日の上限</span><span class="v">¥1,500</span></div>
+      <div class="qr-line"><span class="k">本日の使用</span><span class="v">¥820</span></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn btn-ghost" style="flex:1;padding:10px">入金を送る</button>
+        <button class="btn btn-ghost" style="flex:1;padding:10px">利用履歴</button>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <h3><span class="ico">C</span>バーチャルカード</h3>
+      <div class="card-mini">
+        <div class="row1"><span>kaikei.family · そうた</span><span style="font-weight:700">VISA</span></div>
+        <div class="num">5284  3391  2761  ••••</div>
+        <div class="row2"><span>有効 09 / 29</span><span>小学5 · JR</span></div>
+        <div class="card-mini-actions">
+          <button>ロック</button>
+          <button>上限変更</button>
+          <button>詳細</button>
+        </div>
+      </div>
+      <div style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="padding:14px;border:1px solid var(--line);border-radius:12px">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">今週</div>
+          <div style="font-size:22px;font-weight:600;margin-top:4px">¥2,140</div>
+        </div>
+        <div style="padding:14px;border:1px solid var(--line);border-radius:12px">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">取引</div>
+          <div style="font-size:22px;font-weight:600;margin-top:4px">8 件</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<svg class="wave-seam" viewBox="0 0 1440 64" preserveAspectRatio="none"><path d="M0,24 C240,52 540,8 720,28 C900,48 1200,12 1440,40 L1440,64 L0,64 Z" fill="#fff"/></svg>
+
+<!-- threshold rules -->
+<section class="block" id="rules">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Rules · 親権限</div>
+      <h2>支出の閾値ルール<br>自動でガート</h2>
+    </div>
+    <p>メンバー×カテゴリごとに上限・通知・ブロックを細かく設定。超えそうな瞬間にパパ・ママへ通知が届きます。</p>
+  </div>
+
+  <div class="card reveal">
+    <h3><span class="ico">R</span>家族ルール一覧</h3>
+    <div class="rules-list">
+      <div class="rule">
+        <div class="ava" style="background:var(--kodomo2)">Y</div>
+        <div class="txt"><div class="t">ゆい · お菓子・ジュース</div><div class="d">週3回を超えると通知 → 4回目で決済ブロック</div></div>
+        <div class="r-val">¥800 / 週</div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="rule">
+        <div class="ava" style="background:var(--kodomo1)">S</div>
+        <div class="txt"><div class="t">そうた · ゲーム課金</div><div class="d">1日¥1,500を超えると一時ロック</div></div>
+        <div class="r-val">¥1,500 / 日</div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="rule">
+        <div class="ava" style="background:var(--kodomo3)">A</div>
+        <div class="txt"><div class="t">あおい · おもちゃ</div><div class="d">パパ承認制。QRコード決済は保留します</div></div>
+        <div class="r-val">承認制</div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="rule">
+        <div class="ava" style="background:var(--mama)">M</div>
+        <div class="txt"><div class="t">ママ · サブスク追加</div><div class="d">¥1,000/月を超える新規契約はパパへ共有</div></div>
+        <div class="r-val">¥1,000 / 月</div>
+        <div class="toggle"></div>
+      </div>
+      <div class="rule">
+        <div class="ava" style="background:var(--papa)">P</div>
+        <div class="txt"><div class="t">パパ · 外食</div><div class="d">月¥30,000を超えると家族に共有</div></div>
+        <div class="r-val">¥30,000 / 月</div>
+        <div class="toggle on"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<svg class="wave-seam" viewBox="0 0 1440 64" preserveAspectRatio="none"><path d="M0,40 C240,12 480,52 720,28 C960,4 1200,56 1440,32 L1440,64 L0,64 Z" fill="var(--ivory-2)"/></svg>
+
+<!-- live stream -->
+<section class="block" id="stream">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Live Stream</div>
+      <h2>今この瞬間の<br>おカネの動き</h2>
+    </div>
+    <p>家族みんなの支出がリアルタイムでフィードされます。</p>
+  </div>
+
+  <div class="card reveal">
+    <h3><span class="ico">L</span>直近の取引 <span class="chip" style="margin-left:auto"><span class="dot"></span>5 秒前更新</span></h3>
+    <div class="stream" id="streamList"></div>
+  </div>
+</section>
+
+<!-- footer wave -->
+<div class="footer-wave" aria-hidden="true">
+  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" style="background:var(--ivory-2)">
+    <path d="M0,60 C240,100 480,20 720,60 C960,100 1200,20 1440,60 L1440,120 L0,120 Z" fill="var(--ink)"/>
+    <path d="M0,80 C240,40 480,110 720,80 C960,50 1200,110 1440,80 L1440,120 L0,120 Z" fill="#2A241D" opacity=".7"/>
+  </svg>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <div>
+      <strong style="color:var(--ink)">Kaikei.family</strong><br>
+      <span style="color:var(--muted)">© 2026 — 家族のおカネを、もう一度チームで。</span>
+    </div>
+    <div>
+      <a href="#" style="margin-right:16px">プライバシー</a>
+      <a href="#" style="margin-right:16px">規約</a>
+      <a href="#">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== scroll progress =====
+const guide = document.getElementById('scrollGuide');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = h.scrollTop / (h.scrollHeight - h.clientHeight);
+  guide.style.transform = `scaleX(${pct})`;
+});
+
+// ===== reveal on scroll =====
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }});
+}, { threshold: 0.05, rootMargin: '0px 0px -10% 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+// safety: force show all after 1.5s in case IO never fires
+setTimeout(() => document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in')), 1500);
+
+// ===== toggle rules =====
+document.querySelectorAll('.toggle').forEach(t => {
+  t.addEventListener('click', () => t.classList.toggle('on'));
+});
+
+// ===== flow chart =====
+const months = ['6/2','6/9','6/16','6/23','6/30'];
+const inflow = [180, 220, 260, 240, 280];   // incoming
+const outflow = [120, 170, 200, 230, 240]; // outgoing
+const W = 600, H = 240, PAD = 24;
+const max = 320;
+const colW = (W - PAD*2) / (months.length - 1);
+const yScale = v => H - PAD - (v / max) * (H - PAD*2);
+const xScale = i => PAD + i * colW;
+
+let svgInner = `<line class="ax" x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}"/>`;
+let inflowPath = '', outflowPath = '';
+months.forEach((m, i) => {
+  const y1 = yScale(inflow[i]);
+  inflowPath += (i === 0 ? `M${xScale(i)},${y1}` : ` L${xScale(i)},${y1}`);
+  const y2 = yScale(outflow[i]);
+  outflowPath += (i === 0 ? `M${xScale(i)},${y2}` : ` L${xScale(i)},${y2}`);
+});
+svgInner += `<path d="${inflowPath}" stroke="var(--kodomo3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+svgInner += `<path d="${outflowPath}" stroke="var(--mama)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="2 4"/>`;
+months.forEach((m, i) => {
+  const y1 = yScale(inflow[i]), y2 = yScale(outflow[i]);
+  svgInner += `<circle cx="${xScale(i)}" cy="${y1}" r="3.5" fill="var(--kodomo3)"/>`;
+  svgInner += `<circle cx="${xScale(i)}" cy="${y2}" r="3.5" fill="var(--mama)"/>`;
+  svgInner += `<text class="label" x="${xScale(i)}" y="${H-6}" text-anchor="middle">${m}</text>`;
+  svgInner += `<text class="pt-label" x="${xScale(i)}" y="${y1-10}" text-anchor="middle">${inflow[i]}k</text>`;
+  svgInner += `<text class="pt-label" x="${xScale(i)}" y="${y2+14}" text-anchor="middle">¥${outflow[i]}k</text>`;
+});
+document.getElementById('flowChart').innerHTML = `<svg viewBox="0 0 ${W} ${H}">${svgInner}</svg>${'<div style="display:flex;gap:18px;font-size:12px;color:var(--ink-2);margin-top:8px"><span><span style="display:inline-block;width:14px;height:2.5px;background:var(--kodomo3);vertical-align:middle;margin-right:6px;border-radius:2px"></span>収入</span><span><span style="display:inline-block;width:14px;height:2.5px;background:var(--mama);vertical-align:middle;margin-right:6px;border-radius:2px;border-top:2px dashed var(--mama)"></span>支出</span></div>'}`;
+
+// ===== member list =====
+const members = [
+  { name: 'パパ', sub: '外食・趣味・サブスク', amt: 92340, color: 'var(--papa)', init: 'P' },
+  { name: 'ママ', sub: '食費・日用品・家族', amt: 78420, color: 'var(--mama)', init: 'M' },
+  { name: 'ゆい', sub: '中2 · お菓子・塾', amt: 42180, color: 'var(--kodomo2)', init: 'Y' },
+  { name: 'そうた', sub: '小5 · ゲーム・本', amt: 24760, color: 'var(--kodomo1)', init: 'S' },
+  { name: 'あおい', sub: '年長 · おもちゃ', amt: 11290, color: 'var(--kodomo3)', init: 'A' },
+];
+const total = members.reduce((a, m) => a + m.amt, 0);
+document.getElementById('memberList').innerHTML = members.map(m => {
+  const pct = ((m.amt / total) * 100).toFixed(1);
+  return `<div class="member">
+    <div class="ava" style="background:${m.color}">${m.init}</div>
+    <div class="meta">
+      <div class="n">${m.name} <span style="color:var(--muted);font-weight:400;font-size:12px">· ${m.sub}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="background:${m.color}" data-w="${pct}"></div></div>
+    </div>
+    <div class="amt">¥${m.amt.toLocaleString()}<span class="pct">${pct}%</span></div>
+  </div>`;
+}).join('');
+setTimeout(() => {
+  document.querySelectorAll('.bar-fill').forEach(b => b.style.width = b.dataset.w + '%');
+}, 200);
+
+// ===== live stream =====
+const txns = [
+  { who: 'ゆい', where: 'コンビニ · ナチュラルローソン', price: 380, icon: 'C', color: 'var(--kodomo2)', time: 'たった今' },
+  { who: 'ママ', where: 'ライフ · 野菜・肉・パン', price: 4280, icon: 'L', color: 'var(--mama)', time: '2分前' },
+  { who: 'そうた', where: 'ニンテンドーeShop · DLC', price: 820, icon: 'N', color: 'var(--kodomo1)', time: '8分前' },
+  { who: 'パパ', where: 'スターバックス · 夜活', price: 640, icon: 'S', color: 'var(--papa)', time: '14分前' },
+  { who: 'あおい', where: 'キデイランド · おもちゃ', price: 1480, icon: 'K', color: 'var(--kodomo3)', time: '21分前' },
+  { who: 'ママ', where: 'Amazon · 日用品まとめ買い', price: 3890, icon: 'A', color: 'var(--mama)', time: '34分前' },
+  { who: 'ゆい', where: '塾 · 月謝', price: 12000, icon: 'J', color: 'var(--kodomo2)', time: '1時間前' },
+  { who: 'パパ', where: 'ENEOS · ガソリン', price: 5200, icon: 'G', color: 'var(--papa)', time: '2時間前' },
+  { who: 'そうた', where: '学校 · 給食費', price: 4800, icon: 'B', color: 'var(--kodomo1)', time: '昨日' },
+  { who: 'ママ', where: 'Uber Eats · 夕食', price: 3420, icon: 'U', color: 'var(--mama)', time: '昨日' },
+];
+
+const bgColors = ['rgba(255,122,168,.12)','rgba(47,107,255,.12)','rgba(60,198,166,.12)','rgba(255,179,71,.12)','rgba(160,108,228,.12)'];
+
+function renderStream() {
+  const html = txns.map((t, i) =>
+    `<div class="txn" style="animation-delay:${i*0.05}s">
+      <div class="icn" style="background:${bgColors[i%bgColors.length]};color:${t.color}">${t.icon}</div>
+      <div class="meta"><div class="who">${t.who} <span style="color:var(--muted);font-weight:400">が使った</span></div><div class="where">${t.where}</div></div>
+      <div class="price">-¥${t.price.toLocaleString()}<span class="time">${t.time}</span></div>
+    </div>`
+  ).join('');
+  document.getElementById('streamList').innerHTML = html;
+}
+renderStream();
+
+// ===== periodic live updates =====
+setInterval(() => {
+  const t = txns.shift();
+  txns.push(t);
+  renderStream();
+}, 6000);
+
+// ===== parallax orbs =====
+const orbs = document.querySelectorAll('.orb');
+window.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 10;
+  const y = (e.clientY / window.innerHeight - 0.5) * 10;
+  orbs.forEach((o, i) => {
+    const d = (i + 1) * 0.4;
+    o.style.translate = `${-x * d}px ${-y * d}px`;
+  });
+});
+</script>
+
+</body>
+</html>
